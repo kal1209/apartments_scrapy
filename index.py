@@ -59,7 +59,7 @@ def get_apart_data(website_url):
             HAS_VIDEOS = "Videos" in mediaLinksText
             HAS_VIRTUAL_TOUR = "Virtual Tour" in mediaLinksText
             HAS_EMAIL = has_email_button(li_element)
-            PRICE = extract_element_text(li_element, '.property-pricing') # .price-range / .property-rents
+            PRICE = extract_element_text(li_element, '.property-pricing') or extract_element_text(li_element, '.price-range') or extract_element_text(li_element, '.property-rents')
             PHONE_NUMBER = extract_element_text(li_element, '.phone-link')
             SPECIALS_TEXT = extract_element_text(li_element, '.property-specials')
 
