@@ -1,3 +1,4 @@
 .env
 properties_data.json
 .vscode
+venv

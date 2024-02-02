@@ -19,25 +19,9 @@ def extract_element_attribute(element, selector, attribute):
     except NoSuchElementException:
         return ""
     
-def has_virtual_tour(li_element):
-    try:
-        li_elements = li_element.find_elements(By.CSS_SELECTOR, '.placard-content > .content-inner > .media-wrapper > .media-outer > .media-inner > .media > .mediaLinks > .mediaLinksList > li')
-        
-        if len(li_elements) == 2:
-            # Return True if either the first or second <a> tag has the content "Virtual Tour"
-            return any(a.text == "Virtual Tour" for a in li_element.find_elements(By.CSS_SELECTOR, '.placard-content > .content-inner > .media-wrapper > .media-outer > .media-inner > .media > .mediaLinks > .mediaLinksList > li > a'))
-        elif len(li_elements) == 1:
-            # Return True only if the single <a> tag has the content "Virtual Tour"
-            return li_elements[0].find_element(By.CSS_SELECTOR, 'a').text == "Virtual Tour"
-        else:
-            # No <li> tags, return False
-            return False
-    except NoSuchElementException:
-        return False
-    
 def has_email_button(li_element):
     try:
-        li_element.find_element(By.CSS_SELECTOR, '.placard-content > .content-inner > .property-info > .content-wrapper > .property-actions > .actions-wrapper > button')
+        li_element.find_element(By.CSS_SELECTOR, '.checkAvailability')
         return True
     except NoSuchElementException:
         return False
@@ -61,16 +45,17 @@ try:
     li_elements = driver.find_elements(By.XPATH, '//div[@id="placardContainer"]/ul/li')
 
     for li_element in li_elements:
-        LISTING_NAME = extract_element_text(li_element, '.placard-header > .property-information > .property-link > .property-title > .js-placardTitle')
-        LISTING_LINK = extract_element_attribute(li_element, '.placard-header > .property-information > .property-link', 'href')
-        LISTING_ADDRESS = extract_element_text(li_element, '.placard-header > .property-information > .property-link > .property-address')
-        LISTING_DESCRIPTION = extract_element_text(li_element, '.placard-content > .content-inner > .property-info > .content-wrapper > .property-link > .property-amenities')
-        HAS_VIDEOS = extract_element_text(li_element, '.placard-content > .content-inner > .media-wrapper > .media-outer > .media-inner > .media > .mediaLinks > .mediaLinksList > li:first-child > a') == "Videos"
-        HAS_VIRTUAL_TOUR = has_virtual_tour(li_element)
-        HAS_EMAIL =  has_email_button(li_element)
-        PRICE = extract_element_text(li_element, '.placard-content .top-level-info .property-pricing')
-        PHONE_NUMBER = extract_element_text(li_element, '.placard-content .phone-link span')
-        SPECIALS_TEXT = extract_element_text(li_element, '.placard-content .top-level-info .property-specials span')
+        LISTING_NAME = extract_element_text(li_element, '.property-title')
+        LISTING_LINK = extract_element_attribute(li_element, '.property-link', 'href')
+        LISTING_ADDRESS = extract_element_attribute(li_element, '.property-address', 'title')
+        LISTING_DESCRIPTION = extract_element_text(li_element, '.property-amenities')
+        mediaLinksText = extract_element_text(li_element, '.mediaLinksList')
+        HAS_VIDEOS = "Videos" in mediaLinksText
+        HAS_VIRTUAL_TOUR = "Virtual Tour" in mediaLinksText
+        HAS_EMAIL = has_email_button(li_element)
+        PRICE = extract_element_text(li_element, '.property-pricing') # .price-range / .property-rents
+        PHONE_NUMBER = extract_element_text(li_element, '.phone-link')
+        SPECIALS_TEXT = extract_element_text(li_element, '.property-specials')
 
         property_info = {
             "SCRAPE_TIME": current_datetime,
