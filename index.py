@@ -42,7 +42,7 @@ try:
         EC.presence_of_element_located((By.ID, 'placardContainer'))
     )
 
-    li_elements = driver.find_elements(By.XPATH, '//div[@id="placardContainer"]/ul/li')
+    li_elements = driver.find_elements(By.CSS_SELECTOR, '#placardContainer li.mortar-wrapper')
 
     for li_element in li_elements:
         LISTING_NAME = extract_element_text(li_element, '.property-title')
