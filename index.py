@@ -1,4 +1,5 @@
 import os
+import csv
 import json
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -115,6 +116,9 @@ for state_name, cities in states_cities.items():
 
             if page >= data["page"]:
                 break
-
-        with open(f"arpart_list/{state_name}/{city}.json", 'w') as json_file:
-            json.dump(apart_list, json_file, indent=2)
+        
+        with open(f"arpart_list/{state_name}/{city}.csv", 'w', newline='') as csv_file:
+            csv_writer = csv.DictWriter(csv_file, fieldnames=apart_list[0].keys())
+            csv_writer.writeheader()
+            for row in apart_list:
+                csv_writer.writerow(row)
