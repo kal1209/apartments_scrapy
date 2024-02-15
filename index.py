@@ -91,8 +91,8 @@ def get_apart_data(website_url):
     finally:
         driver.quit()
 
-if not os.path.exists("arpart_list"):
-    os.makedirs("arpart_list")
+if not os.path.exists("apart_list"):
+    os.makedirs("apart_list")
 
 with open("states.json", "r", encoding="utf-8") as f:
     short_states = json.load(f)
@@ -103,8 +103,8 @@ with open("states_cities.json", "r", encoding="utf-8") as f:
 for state_name, cities in states_cities.items():
     short_state = short_states[state_name]
 
-    if not os.path.exists(f"arpart_list/{state_name}"):
-        os.makedirs(f"arpart_list/{state_name}")
+    if not os.path.exists(f"apart_list/{state_name}"):
+        os.makedirs(f"apart_list/{state_name}")
 
     for city in cities:
         apart_list = []
@@ -117,7 +117,7 @@ for state_name, cities in states_cities.items():
             if page >= data["page"]:
                 break
         
-        with open(f"arpart_list/{state_name}/{city}.csv", 'w', newline='') as csv_file:
+        with open(f"apart_list/{state_name}/{city}.csv", 'w', newline='') as csv_file:
             csv_writer = csv.DictWriter(csv_file, fieldnames=apart_list[0].keys())
             csv_writer.writeheader()
             for row in apart_list:
